@@ -1,11 +1,3 @@
-//
-//  AppOneUITests.swift
-//  AppOneUITests
-//
-//  Created by Marcin Karski on 16/10/2018.
-//  Copyright © 2018 Marcin Karski. All rights reserved.
-//
-
 import XCTest
 
 class AppOneUITests: XCTestCase {

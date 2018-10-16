@@ -1,11 +1,3 @@
-//
-//  AppOneTests.swift
-//  AppOneTests
-//
-//  Created by Marcin Karski on 16/10/2018.
-//  Copyright © 2018 Marcin Karski. All rights reserved.
-//
-
 import XCTest
 @testable import AppOne
 

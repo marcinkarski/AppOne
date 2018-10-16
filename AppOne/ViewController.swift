@@ -1,20 +1,26 @@
-//
-//  ViewController.swift
-//  AppOne
-//
-//  Created by Marcin Karski on 16/10/2018.
-//  Copyright © 2018 Marcin Karski. All rights reserved.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    private let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .white
+        return collectionView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        setup()
     }
-
-
+    
+    private func setup() {
+        view.addSubview(collectionView)
+        let constraints = [collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                           collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+                           collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                           collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)]
+        NSLayoutConstraint.activate(constraints)
+    }
 }
-
