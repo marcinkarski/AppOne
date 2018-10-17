@@ -34,6 +34,11 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: UICollectionViewDataSource {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 2
     }
@@ -60,6 +65,11 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 
 class TopCell: UICollectionViewCell {
     
+    let viewController = ViewController()
+    let imageCell = ImageCell()
+    let user = "johnsundell"
+    var tasks = [URLSessionDataTask]()
+    
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -76,13 +86,14 @@ class TopCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        fetchUsers()
     }
     
     private func setup() {
         addSubview(collectionView)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ImageCell")
+        collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
         let constraints = [collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
                            collectionView.topAnchor.constraint(equalTo: topAnchor),
                            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -97,12 +108,12 @@ class TopCell: UICollectionViewCell {
 
 extension TopCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 8
+        return 5
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
-        cell.backgroundColor = .yellow
+//        cell.backgroundColor = .yellow
         return cell
     }
 }
@@ -115,6 +126,91 @@ extension TopCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
     }
+}
+
+private extension TopCell {
+    
+    func loadData(withUsername username: String) {
+        loadProfile(withUsername: username)
+    }
+    
+    func loadProfile(withUsername username: String) {
+        let base: String = "https://api.github.com/users/"
+        guard let url = URL(string: base + username) else { return }
+        let service = APIService()
+        let task = service.request(url) { [weak self] (result: Result<Profile>) in
+            switch result {
+            case .success(let profile):
+                self?.imageCell.configure(with: profile)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+        tasks.append(task)
+    }
+    
+    func fetchUsers() {
+        tasks.forEach { $0.cancel() }
+//        let usersArray: [String] = viewController.users
+
+//        let trimmedName = usersArray.filter({ " ".contains($0) == false })
+        loadData(withUsername: user)
+        print(user)
+    }
+}
+
+class ImageCell: UICollectionViewCell {
+    
+    let service = APIService()
+    var imageRequest: URLSessionDataTask?
+    
+    let imageView: UIImageView = {
+//        let placeholder = UIImage(named: "bottomViewImagePlaceholder")
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        imageView.clipsToBounds = true
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor(white: 0.85, alpha: 1.0).cgColor
+        imageView.layer.cornerRadius = 8
+        return imageView
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    private func setup() {
+        addSubview(imageView)
+        let constraints = [imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                           imageView.topAnchor.constraint(equalTo: topAnchor),
+                           imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                           imageView.bottomAnchor.constraint(equalTo: bottomAnchor)]
+        NSLayoutConstraint.activate(constraints)
+    }
+    
+    func configure(with profile: Profile) {
+        loadImage(for: profile)
+    }
+    
+    func loadImage(for profile: Profile) {
+        guard let url = URL(string: profile.avatarURL) else { return }
+        imageRequest = service.requestImage(withURL: url) { [weak self] result in
+            switch result {
+            case .success(let image):
+                    self?.imageView.image = image
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
 
 // MARK: CategoryCell setup
@@ -194,6 +290,7 @@ class NameCell: UICollectionViewCell {
         nameLabel.text = "Name"
         nameLabel.backgroundColor = .clear
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         nameLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         nameLabel.textColor = UIColor(white: 0.6, alpha: 1.0)
         nameLabel.textAlignment = .left

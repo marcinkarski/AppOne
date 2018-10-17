@@ -15,6 +15,8 @@
 		2E1E6FCD2175DF57005470B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E1E6FCB2175DF57005470B6 /* LaunchScreen.storyboard */; };
 		2E1E6FD82175DF57005470B6 /* AppOneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E6FD72175DF57005470B6 /* AppOneTests.swift */; };
 		2E1E6FE32175DF57005470B6 /* AppOneUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E6FE22175DF57005470B6 /* AppOneUITests.swift */; };
+		2E1E6FF121773F5D005470B6 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E6FF021773F5C005470B6 /* Profile.swift */; };
+		2E1E6FF421773F7E005470B6 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E6FF321773F7E005470B6 /* APIService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		2E1E6FDE2175DF57005470B6 /* AppOneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppOneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E1E6FE22175DF57005470B6 /* AppOneUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOneUITests.swift; sourceTree = "<group>"; };
 		2E1E6FE42175DF57005470B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E1E6FF021773F5C005470B6 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		2E1E6FF321773F7E005470B6 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,7 @@
 			children = (
 				2E1E6FBF2175DF55005470B6 /* AppDelegate.swift */,
 				2E1E6FC12175DF55005470B6 /* ViewController.swift */,
+				2E1E6FF221773F63005470B6 /* Networking */,
 				2E1E6FC32175DF55005470B6 /* Main.storyboard */,
 				2E1E6FC92175DF57005470B6 /* Assets.xcassets */,
 				2E1E6FCB2175DF57005470B6 /* LaunchScreen.storyboard */,
@@ -126,6 +131,15 @@
 				2E1E6FE42175DF57005470B6 /* Info.plist */,
 			);
 			path = AppOneUITests;
+			sourceTree = "<group>";
+		};
+		2E1E6FF221773F63005470B6 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				2E1E6FF321773F7E005470B6 /* APIService.swift */,
+				2E1E6FF021773F5C005470B6 /* Profile.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,6 +274,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E1E6FC82175DF55005470B6 /* AppOne.xcdatamodeld in Sources */,
+				2E1E6FF421773F7E005470B6 /* APIService.swift in Sources */,
+				2E1E6FF121773F5D005470B6 /* Profile.swift in Sources */,
 				2E1E6FC22175DF55005470B6 /* ViewController.swift in Sources */,
 				2E1E6FC02175DF55005470B6 /* AppDelegate.swift in Sources */,
 			);
