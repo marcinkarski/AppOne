@@ -2,6 +2,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    private var isViewControllerInitialized = false
+    
     let users = ["Ash Furrow", "John Sundell", "Todd Kramer", "James Rochabrun", "Jesse Squires"]
     
     private let collectionView: UICollectionView = {
@@ -20,6 +22,16 @@ class ViewController: UIViewController {
         setup()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        guard !self.isViewControllerInitialized else {
+            return
+        }
+        self.isViewControllerInitialized = true
+        self.navigationController?.pushViewController(DetailViewController(), animated: true)
+    }
+    
     private func setup() {
         self.title = "GitHub Profiles"
         collectionView.dataSource = self
@@ -30,6 +42,12 @@ class ViewController: UIViewController {
                            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)]
         NSLayoutConstraint.activate(constraints)
+    }
+    
+    public func presentDetailView() {
+        let detailViewController = DetailViewController()
+        detailViewController.modalPresentationStyle = .overCurrentContext
+        present(detailViewController, animated: true, completion: nil)
     }
 }
 
@@ -67,7 +85,8 @@ class TopCell: UICollectionViewCell {
     
     let viewController = ViewController()
     let imageCell = ImageCell()
-    let user = "johnsundell"
+    let service = APIService()
+    let user = "marcinkarski"
     var tasks = [URLSessionDataTask]()
     
     let collectionView: UICollectionView = {
@@ -112,8 +131,7 @@ extension TopCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
-//        cell.backgroundColor = .yellow
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as! ImageCell
         return cell
     }
 }
@@ -137,7 +155,6 @@ private extension TopCell {
     func loadProfile(withUsername username: String) {
         let base: String = "https://api.github.com/users/"
         guard let url = URL(string: base + username) else { return }
-        let service = APIService()
         let task = service.request(url) { [weak self] (result: Result<Profile>) in
             switch result {
             case .success(let profile):
@@ -165,16 +182,24 @@ class ImageCell: UICollectionViewCell {
     var imageRequest: URLSessionDataTask?
     
     let imageView: UIImageView = {
-//        let placeholder = UIImage(named: "bottomViewImagePlaceholder")
-        let imageView = UIImageView()
+        let placeholder = UIImage(named: "bottomViewImagePlaceholder")
+        let imageView = UIImageView(image: placeholder)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         imageView.clipsToBounds = true
         imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor(white: 0.85, alpha: 1.0).cgColor
+        imageView.layer.borderColor = UIColor(white: 0.95, alpha: 1.0).cgColor
         imageView.layer.cornerRadius = 8
         return imageView
+    }()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.style = .gray
+        indicator.startAnimating()
+        indicator.hidesWhenStopped = true
+        return indicator
     }()
     
     override init(frame: CGRect) {
@@ -184,10 +209,13 @@ class ImageCell: UICollectionViewCell {
     
     private func setup() {
         addSubview(imageView)
+        imageView.addSubview(activityIndicator)
         let constraints = [imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
                            imageView.topAnchor.constraint(equalTo: topAnchor),
                            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                           imageView.bottomAnchor.constraint(equalTo: bottomAnchor)]
+                           imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                           activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)]
         NSLayoutConstraint.activate(constraints)
     }
     
@@ -200,7 +228,8 @@ class ImageCell: UICollectionViewCell {
         imageRequest = service.requestImage(withURL: url) { [weak self] result in
             switch result {
             case .success(let image):
-                    self?.imageView.image = image
+                self?.activityIndicator.stopAnimating()
+                self?.imageView.image = image
             case .failure(let error):
                 print(error)
             }
@@ -218,7 +247,7 @@ class ImageCell: UICollectionViewCell {
 class CategoryCell: UICollectionViewCell {
     
     let viewController = ViewController()
-    
+
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -226,6 +255,7 @@ class CategoryCell: UICollectionViewCell {
         layout.minimumInteritemSpacing = 1
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.isUserInteractionEnabled = true
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.showsVerticalScrollIndicator = false
         collectionView.bounces = false
@@ -268,11 +298,18 @@ extension CategoryCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? NameCell {
             cell.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
                 cell.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
             }
+            let detailViewController = DetailViewController()
+            guard let cellName = cell.nameLabel.text else { return }
+            let trimmedName = cellName.filter({ " ".contains($0) == false })
+            detailViewController.selectedName = trimmedName.lowercased()
+            viewController.presentDetailView()
+//            let user = viewController.users[indexPath.row]
+//                viewController.presentDetailView(user: user)
         }
     }
 }

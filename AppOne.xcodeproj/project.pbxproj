@@ -17,6 +17,8 @@
 		2E1E6FE32175DF57005470B6 /* AppOneUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E6FE22175DF57005470B6 /* AppOneUITests.swift */; };
 		2E1E6FF121773F5D005470B6 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E6FF021773F5C005470B6 /* Profile.swift */; };
 		2E1E6FF421773F7E005470B6 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E6FF321773F7E005470B6 /* APIService.swift */; };
+		2E1E701421778D64005470B6 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E701321778D64005470B6 /* DetailViewController.swift */; };
+		2E1E701621778D99005470B6 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E701521778D99005470B6 /* ProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		2E1E6FE42175DF57005470B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E1E6FF021773F5C005470B6 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		2E1E6FF321773F7E005470B6 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		2E1E701321778D64005470B6 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		2E1E701521778D99005470B6 /* ProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,8 @@
 			children = (
 				2E1E6FBF2175DF55005470B6 /* AppDelegate.swift */,
 				2E1E6FC12175DF55005470B6 /* ViewController.swift */,
+				2E1E701321778D64005470B6 /* DetailViewController.swift */,
+				2E1E701521778D99005470B6 /* ProfileView.swift */,
 				2E1E6FF221773F63005470B6 /* Networking */,
 				2E1E6FC32175DF55005470B6 /* Main.storyboard */,
 				2E1E6FC92175DF57005470B6 /* Assets.xcassets */,
@@ -276,7 +282,9 @@
 				2E1E6FC82175DF55005470B6 /* AppOne.xcdatamodeld in Sources */,
 				2E1E6FF421773F7E005470B6 /* APIService.swift in Sources */,
 				2E1E6FF121773F5D005470B6 /* Profile.swift in Sources */,
+				2E1E701421778D64005470B6 /* DetailViewController.swift in Sources */,
 				2E1E6FC22175DF55005470B6 /* ViewController.swift in Sources */,
+				2E1E701621778D99005470B6 /* ProfileView.swift in Sources */,
 				2E1E6FC02175DF55005470B6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
